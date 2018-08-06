@@ -1,19 +1,11 @@
 FROM sshd
 
+RUN apt-get update && apt-get install -y \
+    git \
+    curl 
+
 ARG user
 ARG id
 
-COPY build_scripts/user_installs.sh /tmp
-RUN su ${user} -c /tmp/user_installs.sh
-
-COPY build_scripts/personalize.sh /tmp
-RUN su ${user} -c /tmp/personalize.sh
-
-COPY build_scripts/haskellBashrc /tmp
-RUN su ${user} -c 'cp /tmp/haskellBashrc ~'
-RUN su ${user} -c 'echo . ~/haskellBashrc | tee -a ~/.bashrc'
-
-COPY build_scripts/haskellVimrc /tmp
-RUN su ${user} -c 'cp /tmp/haskellVimrc ~'
-RUN su ${user} -c "echo so ~/haskellVimrc" | tee -a .vimrc
+RUN su ${user} -c 'git clone https://github.com/reflex-frp/reflex-platform.git ~/reflex-platform'
 
